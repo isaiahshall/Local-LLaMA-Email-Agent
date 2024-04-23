@@ -2,7 +2,7 @@
 ###############
 token.json
 credentials.json
-daily_summary.json
+daily_summary.txt
 # Compiled source #
 ###################
 *.com

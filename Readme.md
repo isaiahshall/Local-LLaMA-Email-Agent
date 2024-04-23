@@ -1,4 +1,4 @@
-# Local LLaMA3 Email Agent
+# LLEmail: Local LLaMA3 Email Agent
 
 This Python application leverages the Ollama LLaMA 3 model via the Ollama-python library to automatically summarize emails and generate task lists from your Gmail account. The tool integrates with the Gmail API to fetch emails, summarize their contents, and identify key action items, saving you time and enhancing productivity.
 
@@ -59,6 +59,35 @@ The output files and console logs will include detailed summaries and identified
 ## Contributing
 
 Feel free to fork this repository and submit pull requests. You can also open an issue if you find bugs or have feature suggestions.
+
+## Project Roadmap
+
+The following is a planned list of enhancements and features that we aim to implement in the future. This roadmap is subject to change as we progress in our development and gather feedback from our users. Contributors are welcome to tackle any of these enhancements:
+
+### Short-Term Goals
+- **Adding Functionality for Additional Email Providers**
+  - [ ] Integrate support for Office365 via the Microsoft Graph API.
+  - [ ] Add functionality to handle emails from Yahoo using OAuth and Yahoo's Mail API.
+
+- **User Interface Enhancements**
+  - [ ] Develop a graphical user interface (GUI) to make the tool accessible for non-technical users.
+  - [ ] Implement GUI elements that allow users to customize settings and view summaries interactively.
+
+### Mid-Term Goals
+- **Preset Prompt Customization for LLaMA3 8B**
+  - [ ] Conduct usability testing to gather data on current prompt effectiveness.
+  - [ ] Develop better preset prompt options based on testing feedback.
+  - [ ] Optimize and customize prompts to improve the accuracy and relevance of generated summaries with the LLaMA3 8B model.
+
+### Long-Term Goals
+- **Extended Support and Integration**
+  - [ ] Create a Telegram bot that users can interact with to receive updates and summaries directly on their mobile devices.
+  - [ ] Ensure the Telegram bot supports commands for immediate interaction and scheduled summaries.
+
+### How to Contribute
+To contribute to the project, please follow the steps outlined in our `CONTRIBUTING.md` file. We encourage you to pick up tasks from the roadmap, or suggest new features or improvements by opening an issue. For major changes, please open an issue first to discuss what you would like to change.
+
+We appreciate your interest and contributions to making this project more robust and user-friendly!
 
 ## License
 
