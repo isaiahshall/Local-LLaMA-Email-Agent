@@ -30,7 +30,7 @@ This Python application leverages the Ollama LLaMA 3 model via the Ollama-python
 
 1. Run the script:
    ```bash
-   python email_summarizer.py
+   python LLEmail.py
    ```
 2. The first run will prompt you to authorize access to your Gmail through a web browser.
 3. After authorization, the script will fetch new emails, summarize them, and generate a daily summary and task list, which will be saved to daily_summary.txt.
