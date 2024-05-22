@@ -1,5 +1,4 @@
-# Creating an email summarization / task list generating tool using Ollama with LLaMA 3, the Ollama-pyhthon library, 
-# with integrations for both the Outlook and Gmail API
+# Creating an email summarization / task list generating tool using Ollama
 import os.path
 from ollama import Client
 import base64
@@ -9,6 +8,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+MODEL = "llama3"
+
+CONTEXT_SIZE = 8192
+
+OUTPUT_LENGTH = 1000
+
+TEMPERATURE = 0.1
 
 # If modifying these scopes, delete the file token.json.
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -92,8 +99,8 @@ def summarizeEmails(emails_output, client):
         # add a timeout such that if the response takes too long, we try generating the response again
 
         try:
-            print("LLaMA3 Input Length:" + str(len(email[2].split(" "))))
-            summary = client.chat(model="llama3", stream=False, options={"num_predict": (7000 // len(emails_output)), "temperature": 0.3, "num_ctx": 8192}, messages=[
+            print(MODEL + "Input Length:" + str(len(email[2].split(" "))))
+            summary = client.chat(model=MODEL, stream=False, options={"num_predict": ((CONTEXT_SIZE - OUTPUT_LENGTH) // len(emails_output)), "temperature": TEMPERATURE, "num_ctx": CONTEXT_SIZE}, messages=[
                 {
                     'role': 'system',
                     'content': 'You are a powerful email-handling personal assistant that is excellent at saving me (your boss) time. Your task is to summarize the following email into a single header, with any action items listed as bullet points (action items only for IMPORTANT emails). Also, categorize the email into one of two categories IMPORTANT (/personal/work/admin) and UNIMPORTANT (marketing/spam/other). Also, if the email seems to be a template, I only care about the content that is unique to this email, not that it is a template.',
@@ -108,17 +115,21 @@ def summarizeEmails(emails_output, client):
         
 
 def createDailySummary(emails_output, client):
-    summary = client.generate(model="llama3", stream=False, options={"temperature": 0, "num_predict": 1000, "num_ctx": 8192}, system="You are a powerful email-handling personal assistant that is excellent at saving your boss time. Create a to-do list from the following email summaries which are classified as IMPORTANT. Then, provide a short written summary of highlights from all of the emails (they are from the past 24hrs)", prompt=str(emails_output))
+    summary = client.generate(model=MODEL, stream=False, options={"temperature": TEMPERATURE, "num_predict": OUTPUT_LENGTH, "num_ctx": CONTEXT_SIZE}, system="You are a powerful email-handling personal assistant that is excellent at saving your boss time. Create a to-do list from the following email summaries which are classified as IMPORTANT. Then, provide a short written summary of highlights from all of the emails (they are from the past 24hrs)", prompt=str(emails_output))
     return summary
 
 if __name__ == "__main__":
     client = Client(host='http://localhost:11434', timeout=240)
     try:
-        client.chat(model="llama3")
-    except client.ResponseError as e:
-        print('Error:', e.error)
-        if e.status_code == 404:
-            client.pull(model="llama3")
+        client.chat(model=MODEL)
+    except:
+        print("Model not found, pulling model...")
+        downloadStatus = client.pull(model=MODEL)
+        # print downloadStatus["status"], which is a stream of the download status
+        for chunk in downloadStatus["status"]:
+            print(chunk)
+        
+
     emails = createGmailRequest()
     print("\n All emails collected. Summarizing... \n")
     summarizeEmails(emails, client)
